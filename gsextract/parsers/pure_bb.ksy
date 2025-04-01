@@ -15,15 +15,15 @@ types:
         type: bbheader
       - id: data_field
         size: bbheader.data_field_length_bytes - 4
-        if: bbheader.bbsync == 0xB8
+        if: bbheader.bbsync == 0x4100
       - id: crc32
         size: 4
-        if: bbheader.bbsync == 0xB8
+        if: bbheader.bbsync == 0x4100
       - id: corrupt_data
         type: junk_data
         repeat: until
         repeat-until: _.next_byte == _root.bbsync
-        if: bbheader.bbsync != 0xB8
+        if: bbheader.bbsync != 0x4100
   bbheader:
     seq:
       - id: bbsync
@@ -34,19 +34,19 @@ types:
         type: b8
       - id: user_packet_length
         type: b16
-        if: bbsync == 0xB8
+        if: bbsync == 0x4100
       - id: data_field_length
         type: b16
-        if: bbsync == 0xB8
+        if: bbsync == 0x4100
       - id: sync
         type: b8
-        if: bbsync == 0xB8
+        if: bbsync == 0x4100
       - id: syncd
         type: b16
-        if: bbsync == 0xB8
+        if: bbsync == 0x4100
       - id: crc8
         type: b8
-        if: bbsync == 0xB8
+        if: bbsync == 0x4100
     instances:
       data_field_length_bytes:
         value: data_field_length / 8
@@ -79,7 +79,7 @@ types:
         consume: false
 instances:
   bbsync:
-    value: 0xB8
+    value: 0x4100
     doc: |
       This value is used to recover from broken bbheader streams by looking for the next valid bbheader.
       It can be manually edited or specified by modifying the generated constructor like so:
